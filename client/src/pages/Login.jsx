@@ -5,7 +5,7 @@ import customFetch from "../utils/customFetch"
 import { toast } from "react-toastify"
 
 // This is the action function that will be called when the form is submitted
-export const action = async ({ request }) => {
+export const action = (queryClient) => async ({ request }) => {
     const formData = await request.formData()
     const data = Object.fromEntries(formData)
     const errors = {}
@@ -17,6 +17,7 @@ export const action = async ({ request }) => {
 
     try {
         await customFetch.post('/auth/login', data)
+        queryClient.invalidateQuerys();
         toast.success('Logged in successfully')
         return redirect('/dashboard')
     } catch (error) {

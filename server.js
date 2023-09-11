@@ -1,6 +1,7 @@
 // First import environment variables from .env file
 import 'express-async-errors';
 import * as dotenv from 'dotenv';
+
 dotenv.config();
 
 // Then import express and morgan
@@ -9,7 +10,8 @@ import morgan from 'morgan';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import cloudinary from 'cloudinary';
-
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
 
 // Custom imports
 import jobRouter from './routes/jobRouter.js';
@@ -48,17 +50,8 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.static(path.resolve(__dirname, './client/dist')));
 app.use(cookieParser());
 app.use(express.json());
-
-
-// Then add a simple route
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-
-
-app.get('/api/v1/test', (req, res) => {
-    res.json({ message: 'E!' });
-});
+app.use(helmet());
+app.use(mongoSanitize());
 
 
 // Then add some routes
